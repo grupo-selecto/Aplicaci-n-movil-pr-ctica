@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/listadoCompleto"
+        android:icon="@android:drawable/arrow_down_float"
+        android:title="Listado completo"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/favoritos"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="Editar Favoritos"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/añadirPelicula"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="Añadir pelicula"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/mostrarColumnas"
+        android:icon="@drawable/img"
+        android:title="Mostrar en dos columnas"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/soloFavoritos"
+        android:icon="@android:drawable/btn_star_big_on"
+        android:title="Mostrar Favoritos"
+        app:showAsAction="always" />
+</menu>

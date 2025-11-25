@@ -31,6 +31,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<Pelicula> peliculas = Datos.rellenaPeliculas();
+    ArrayList<Pelicula> favoritos = new ArrayList<>();
     RecyclerView rv;
     Adaptador1 ad1;
     Toolbar tb;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     ImageButton btn;
     TextView tv;
     boolean iconChanged = false;
+    boolean normal = true;
 
 
     RecyclerView.LayoutManager manager1;
@@ -46,7 +48,33 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onActivityResult(ActivityResult result) {
             if (result.getResultCode() == RESULT_OK) {
-                Intent intent = result.getData();
+                Intent data = result.getData();
+                if (data != null) {
+                    if (data.hasExtra("peliculas")) {
+                        ArrayList<Pelicula> peliculasActualizadas = (ArrayList<Pelicula>) data.getSerializableExtra("peliculas");
+                        if (peliculasActualizadas != null && peliculas != peliculasActualizadas) {
+                            peliculas.clear();
+                            peliculas.addAll(peliculasActualizadas);
+                            ad1.notifyDataSetChanged();
+                        }
+                    }
+                    if (data.hasExtra("favoritos")) {
+                        ArrayList<Pelicula> favoritosActualizados = (ArrayList<Pelicula>) data.getSerializableExtra("favoritos");
+                        if (favoritosActualizados != null) {
+                            favoritos.clear();
+                            favoritos.addAll(favoritosActualizados);
+                            ad1.notifyDataSetChanged();
+                        }
+                    }
+                    if (data.hasExtra("peli")) {
+                        Pelicula peli = (Pelicula) data.getSerializableExtra("peli");
+                        if (peli != null) {
+                            peliculas.add(peli);
+                            ad1.notifyDataSetChanged();
+                        }
+                    }
+
+                }
             }
         }
     });
@@ -66,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Peliculas");
         rv = findViewById(R.id.rv);
         tv = findViewById(R.id.textView);
-        ad1 = new Adaptador1(peliculas, tv);
+        ad1 = new Adaptador1(peliculas, favoritos, tv, normal);
         manager1 = new LinearLayoutManager(this);
         rv.setLayoutManager(manager1);
         rv.setAdapter(ad1);
@@ -110,13 +138,20 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.listadoCompleto) {
             Intent intent = new Intent(MainActivity.this, ListadoCompleto.class);
-            startActivity(intent);
+            intent.putExtra("peliculas", peliculas);
+            intent.putExtra("favoritos", favoritos);
+            launcher.launch(intent);
             return true;
         } else if (id == R.id.favoritos) {
-
+            Intent intent = new Intent(MainActivity.this, ListadoFavoritos.class);
+            intent.putExtra("peliculas", peliculas);
+            intent.putExtra("favoritos", favoritos);
+            launcher.launch(intent);
             return true;
         } else if (id == R.id.añadirPelicula) {
-
+            Intent intent = new Intent(MainActivity.this, NuevaPelicula.class);
+            intent.putExtra("peliculas", peliculas);
+            launcher.launch(intent);
             return true;
         } else if (id == R.id.mostrarColumnas) {
 
@@ -124,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                 item.setIcon(R.drawable.img_1);
                 item.setTitle("Mostrar en 1 columna");
                 iconChanged = true;
-                rv.setLayoutManager(new GridLayoutManager(this,2));
+                rv.setLayoutManager(new GridLayoutManager(this, 2));
             } else {
                 item.setIcon(R.drawable.img);
                 rv.setLayoutManager(manager1);
@@ -133,7 +168,15 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         } else if (id == R.id.soloFavoritos) {
-
+            if (normal) {
+                ad1.setPeliculas(favoritos);
+                normal = false;
+            } else {
+                ad1.setPeliculas(peliculas);
+                normal = true;
+            }
+            ad1.setNormal(normal);
+            ad1.notifyDataSetChanged();
             return true;
         }
         return super.onOptionsItemSelected(item);

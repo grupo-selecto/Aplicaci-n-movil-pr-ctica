@@ -1,5 +1,7 @@
 package com.example.practicafinal;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -10,7 +12,7 @@ public class Pelicula implements Serializable {
     Date fecha;
     boolean favorita;
 
-    private SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy");
+    private transient SimpleDateFormat dateformat = new SimpleDateFormat("dd-MM-yyyy");
 
     public Pelicula(String titulo, String director, int duracion, Date fecha, String sala, int clasi, int portada) {
         this.clasi=clasi;
@@ -83,5 +85,23 @@ public class Pelicula implements Serializable {
     }
     public void setDuracion(int duracion) {
         this.duracion=duracion;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return getTitulo();
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Pelicula)) return false;
+        Pelicula other = (Pelicula) obj;
+        return titulo.equals(other.titulo); // O cualquier otro campo único
+    }
+
+    @Override
+    public int hashCode() {
+        return titulo.hashCode(); // Debe coincidir con equals
     }
 }

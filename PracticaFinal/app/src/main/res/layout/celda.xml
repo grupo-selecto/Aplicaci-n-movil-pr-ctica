@@ -35,6 +35,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
+        android:textStyle="bold"
+        android:textSize="30sp"
         android:textAlignment="center"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="@id/imgvPortada"
@@ -54,4 +56,14 @@
         app:layout_constraintTop_toBottomOf="@id/tvTitulo"
         tools:layout_editor_absoluteX="224dp"
         tools:layout_editor_absoluteY="43dp" />
+
+    <ImageButton
+        android:id="@+id/imgFav"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/imgvclasificacion"
+        app:layout_constraintStart_toEndOf="@+id/imgvPortada"
+        app:layout_constraintTop_toTopOf="@+id/imgvPortada"
+        app:srcCompat="@android:drawable/btn_star" />
 </androidx.constraintlayout.widget.ConstraintLayout>

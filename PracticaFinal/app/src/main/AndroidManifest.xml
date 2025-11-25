@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PracticaFinal">
         <activity
+            android:name=".SoloFavoritos"
+            android:exported="false" />
+        <activity
+            android:name=".NuevaPelicula"
+            android:exported="false" />
+        <activity
             android:name=".ListadoFavoritos"
             android:exported="false" />
         <activity

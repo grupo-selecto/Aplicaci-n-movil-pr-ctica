@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 public class Adaptador2 extends RecyclerView.Adapter<Adaptador2.MyViewHolder> {
 
     public ArrayList<Pelicula> peliculas;
+    public ArrayList<Pelicula> favoritos;
 
     int selectedPos = RecyclerView.NO_POSITION;
 
@@ -40,8 +42,9 @@ public class Adaptador2 extends RecyclerView.Adapter<Adaptador2.MyViewHolder> {
         }
     }
 
-    public Adaptador2(ArrayList<Pelicula> peliculas, ListadoCompleto actividad) {
+    public Adaptador2(ArrayList<Pelicula> peliculas,ArrayList<Pelicula> favoritos, ListadoCompleto actividad) {
         this.peliculas = peliculas;
+        this.favoritos = favoritos;
         this.actividad=actividad;
     }
 
@@ -54,12 +57,18 @@ public class Adaptador2 extends RecyclerView.Adapter<Adaptador2.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.getPortada().setImageResource(peliculas.get(position).getPortada());
-        holder.getDirector().setText(peliculas.get(position).getDirector());
-        holder.getEstreno().setText(peliculas.get(position).getFecha().toString());
-        holder.getSala().setText(peliculas.get(position).getSala());
-        holder.getClasi().setImageResource(peliculas.get(position).getClasi());
-        holder.getDuracion().setText(peliculas.get(position).getDuracion() + " min");
+        Pelicula p =peliculas.get(position);
+        holder.getPortada().setImageResource(p.getPortada());
+        holder.getDirector().setText(p.getDirector());
+        holder.getEstreno().setText(p.getFecha().toString());
+        holder.getSala().setText(p.getSala());
+        holder.getClasi().setImageResource(p.getClasi());
+        holder.getDuracion().setText(p.getDuracion() + " min");
+        if (favoritos.contains(p)){
+            holder.btnFav.setImageResource(R.drawable.star);
+        }else{
+            holder.btnFav.setImageResource(R.drawable.graystar);
+        }
     }
 
     @Override
@@ -70,6 +79,7 @@ public class Adaptador2 extends RecyclerView.Adapter<Adaptador2.MyViewHolder> {
     public class MyViewHolder extends RecyclerView.ViewHolder {
         private ImageView portada, clasi;
         private TextView director, estreno, duracion, sala;
+        private ImageButton btnFav;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -79,6 +89,8 @@ public class Adaptador2 extends RecyclerView.Adapter<Adaptador2.MyViewHolder> {
             this.estreno = itemView.findViewById((R.id.estreno));
             this.duracion = itemView.findViewById(R.id.duracion);
             this.sala = itemView.findViewById(R.id.sala);
+            this.btnFav=itemView.findViewById(R.id.btnFav);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -87,6 +99,21 @@ public class Adaptador2 extends RecyclerView.Adapter<Adaptador2.MyViewHolder> {
                     Intent intent = new Intent(actividad, ListadoCompleto2.class);
                     intent.putExtra("peli",peliculas.get(pos));
                     actividad.launcher.launch(intent);
+                }
+            });
+
+            btnFav.setOnClickListener(v -> {
+                int pos = getAbsoluteAdapterPosition();
+                if (pos>=0){
+                    Pelicula p = peliculas.get(pos);
+                    if (favoritos.contains(p)){
+                        favoritos.remove(p);
+                        btnFav.setImageResource(R.drawable.graystar);
+                    }else{
+                        favoritos.add(p);
+                        btnFav.setImageResource(R.drawable.star);
+                    }
+                    notifyItemChanged(pos);
                 }
             });
         }
